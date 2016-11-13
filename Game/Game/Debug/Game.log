@@ -1,0 +1,3 @@
+﻿  Board.cpp
+c:\users\rachel\documents\github\othello\game\game\board.cpp(49): warning C4154: deletion of an array expression; conversion to pointer supplied
+  Game.vcxproj -> C:\Users\Rachel\Documents\GitHub\Othello\Game\Debug\Game.exe
