@@ -16,10 +16,11 @@ int main()
 	bool gameOver;
 
 	Board Board;
-	
+	Board.initBoard();
+	Board.display();
+
 	// initializations
 	gameOver = 0;
-	// constructor inits Board
 
 	cout << "A-H for rows, 1-8 for columns \n";
 	cout << "Who begins? W or B: ";
