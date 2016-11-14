@@ -12,16 +12,18 @@ int main()
 	// declarations
 	char WhoStarts;
 	char column;
+	char winner;
 	int row;
 	bool gameOver;
 
 	Board Board;
 	Board.initBoard();
 
-	// initializations
-	gameOver = 0;
 
-	cout << "A-H for rows, 1-8 for columns \n";
+	// initializations
+	gameOver = false;
+
+	cout << "A-H for rows, 1-8 for columns\nS1 for skip" << endl;
 	cout << "Who begins? W or B: ";
 	cin >> WhoStarts;
 
@@ -43,11 +45,13 @@ int main()
 
 		Board.makeMove('B', column, row);
 		Board.display();
+
 		}
 
 
 	while (!gameOver)
 	{
+
 		// read moves
 		do {
 			cout << "Enter white move: ";
@@ -56,6 +60,7 @@ int main()
 
 		Board.makeMove('W', column, row);
 		Board.display();
+//		gameOver = Board.endGame();
 
 		if(!gameOver)
 		{
@@ -66,12 +71,22 @@ int main()
 
 			Board.makeMove('B', column, row);
 			Board.display();
+//			gameOver = Board.endGame();
 		}
-
-		// if winner or draw
-			// gameOver = 1;
 	}
- 
+
+/*
+	//Score game
+	cout << "Game Over" << endl;
+	winner = Board.scoreGame();
+
+	if (winner == 'T')
+		cout << "Game was a Tie" << endl;
+	else if (winner == 'W')
+		cout << "Winner is: White" << endl;
+	else
+		cout << "Winner is: Black" << endl;
+*/
     return 0;
 }
 
