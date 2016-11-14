@@ -1,7 +1,4 @@
-﻿  Game.cpp
-c:\github repos\ai-othello\game\game\game.cpp(15): warning C4101: 'winner': unreferenced local variable
-  Board.cpp
-c:\github repos\ai-othello\game\game\board.cpp(516): warning C4154: deletion of an array expression; conversion to pointer supplied
-  Generating Code...
-  Game.vcxproj -> C:\GitHub Repos\AI-Othello\Game\Debug\Game.exe
-  Game.vcxproj -> C:\GitHub Repos\AI-Othello\Game\Debug\Game.pdb (Full PDB)
+﻿  Board.cpp
+c:\users\mvara\documents\github\ai-othello\game\game\board.cpp(516): warning C4154: deletion of an array expression; conversion to pointer supplied
+  Game.vcxproj -> C:\Users\mvara\Documents\GitHub\AI-Othello\Game\Debug\Game.exe
+  Game.vcxproj -> C:\Users\mvara\Documents\GitHub\AI-Othello\Game\Debug\Game.pdb (Full PDB)
