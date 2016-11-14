@@ -35,8 +35,12 @@ void Board::display()
 	cout << endl;
 } 
 
-void Board::makeMove(char color, char column, int row)
-{
+void Board::makeMove(char color, char column, int row) {
+
+	// Check for skipped move
+	if (column == 'S' && row == 1)
+		return;
+
 	int newcol = column - 0x41;	// convert character to numerical
 	int newrow = row - 1;
 
@@ -253,14 +257,19 @@ void Board::makeMove(char color, char column, int row)
 			flipSW = false;
 		}
 	}
+//	spacesRemain -= 1;
 }
 
 
 
 
 
-bool Board::isValidMove(char color, char column, int row)
-{
+bool Board::isValidMove(char color, char column, int row) {
+
+	//Check for player skip move 
+	if (column == 'S' && row == 1)
+		return true;
+
 	int newcol = column - 0x41;							// Convert character to numerical
 	int newrow = (row - 1);							// Shift column by 1
 	int tempCol, tempRow;
@@ -274,8 +283,6 @@ bool Board::isValidMove(char color, char column, int row)
 	flipNW = false;
 	flipSE = false;
 	flipSW = false;
-
-
 
 	//Check if rows and columns are within valid range
 	if (newrow < 0 || newrow > 7 || newcol < 0 || newcol > 7) {
@@ -296,7 +303,7 @@ bool Board::isValidMove(char color, char column, int row)
 	tempCol = newcol;						
 	tempRow = newrow - 1;
 
-	if (tempCol >= 2 && tempCol <= 7 && tempRow >= 2 && tempRow <= 7) {				// Check if temp space exists on board 
+	if (tempCol >= 1 && tempCol <= 8 && tempRow >= 1 && tempRow <= 8) {				// Check if temp space exists on board 
 		if (board[tempCol][tempRow] != ' ' && board[tempCol][tempRow] != color) {	// Check if space is occupied by opponent piece
 			tempRow -= 1;															// Move to next space above opponents piece
 			for (tempRow; tempRow >= 1; tempRow--) {								// Scan to upper edge of board for another player piece
@@ -311,7 +318,7 @@ bool Board::isValidMove(char color, char column, int row)
 	tempCol = newcol;							
 	tempRow = newrow + 1;
 
-	if (tempCol >= 2 && tempCol <= 7 && tempRow >= 2 && tempRow <= 7) {				// Check if temp space exists on board 
+	if (tempCol >= 1 && tempCol <= 8 && tempRow >= 1 && tempRow <= 8) {				// Check if temp space exists on board 
 		if (board[tempCol][tempRow] != ' ' && board[tempCol][tempRow] != color) {	// Check if space is occupied by opponent piece
 			tempRow += 1;															// Move to next space below opponents piece
 			for (tempRow; tempRow <= 8; tempRow++) {								// Scan to lower edge of board for another player piece
@@ -326,7 +333,7 @@ bool Board::isValidMove(char color, char column, int row)
 	tempCol = newcol - 1;										
 	tempRow = newrow;
 
-	if (tempCol >= 2 && tempCol <= 7 && tempRow >= 2 && tempRow <= 7) {				// Check if temp space exists on board 
+	if (tempCol >= 1 && tempCol <= 8 && tempRow >= 1 && tempRow <= 8) {				// Check if temp space exists on board 
 		if (board[tempCol][tempRow] != ' ' && board[tempCol][tempRow] != color) {	// Check if space is occupied by opponent piece
 			tempCol -= 1;															// Move to next space left of opponents piece
 			for (tempCol; tempCol >= 1; tempCol--) {								// Scan to left edge of board for another player piece
@@ -341,7 +348,7 @@ bool Board::isValidMove(char color, char column, int row)
 	tempCol = newcol + 1;									
 	tempRow = newrow;
 
-	if (tempCol >= 2 && tempCol <= 7 && tempRow >= 2 && tempRow <= 7) {				// Check if temp space exists on board 
+	if (tempCol >= 1 && tempCol <= 8 && tempRow >= 1 && tempRow <= 8) {				// Check if temp space exists on board 
 		if (board[tempCol][tempRow] != ' ' && board[tempCol][tempRow] != color) {	// Check if space is occupied by opponent piece
 			tempCol += 1;															// Move to next space right of opponents piece
 			for (tempCol; tempCol <= 8; tempCol++) {								// Scan to right edge of board for another player piece
@@ -356,7 +363,7 @@ bool Board::isValidMove(char color, char column, int row)
 	tempCol = newcol - 1;
 	tempRow = newrow - 1;
 
-	if (tempCol >= 2 && tempCol <= 7 && tempRow >= 2 && tempRow <= 7) {				// Check if temp space exists on board 
+	if (tempCol >= 1 && tempCol <= 8 && tempRow >= 1 && tempRow <= 8) {				// Check if temp space exists on board 
 		if (board[tempCol][tempRow] != ' ' && board[tempCol][tempRow] != color) {	// Check if space is occupied by opponent piece
 			tempRow -= 1;															// Move up and left one space 
 			tempCol -= 1;
@@ -384,7 +391,7 @@ bool Board::isValidMove(char color, char column, int row)
 	tempCol = newcol + 1;
 	tempRow = newrow - 1;
 
-	if (tempCol >= 2 && tempCol <= 7 && tempRow >= 2 && tempRow <= 7) {				// Check if temp space exists on board 
+	if (tempCol >= 1 && tempCol <= 8 && tempRow >= 1 && tempRow <= 8) {				// Check if temp space exists on board 
 		if (board[tempCol][tempRow] != ' ' && board[tempCol][tempRow] != color) {	// Check if space is occupied by opponent piece
 			tempRow -= 1;															// Move up and left one space 
 			tempCol += 1;
@@ -412,7 +419,7 @@ bool Board::isValidMove(char color, char column, int row)
 	tempCol = newcol + 1;
 	tempRow = newrow + 1;
 
-	if (tempCol >= 2 && tempCol <= 7 && tempRow >= 2 && tempRow <= 7) {				// Check if temp space exists on board 
+	if (tempCol >= 1 && tempCol <= 8 && tempRow >= 1 && tempRow <= 8) {				// Check if temp space exists on board 
 		if (board[tempCol][tempRow] != ' ' && board[tempCol][tempRow] != color) {	// Check if space is occupied by opponent piece
 			tempRow += 1;															// Move up and left one space 
 			tempCol += 1;
@@ -440,7 +447,7 @@ bool Board::isValidMove(char color, char column, int row)
 	tempCol = newcol - 1;
 	tempRow = newrow + 1;
 
-	if (tempCol >= 2 && tempCol <= 7 && tempRow >= 2 && tempRow <= 7) {				// Check if temp space exists on board 
+	if (tempCol >= 1 && tempCol <= 8 && tempRow >= 1 && tempRow <= 8) {				// Check if temp space exists on board 
 		if (board[tempCol][tempRow] != ' ' && board[tempCol][tempRow] != color) {	// Check if space is occupied by opponent piece
 			tempRow += 1;															// Move up and left one space 
 			tempCol -= 1;
@@ -468,8 +475,41 @@ bool Board::isValidMove(char color, char column, int row)
 		return true;
 	}
 	else
+		cout << "Invalid Move!" << endl;
 		return false;
 }
+
+
+bool Board::endGame() {
+	if (spacesRemain >= 1)
+		return false;
+	else
+		return true;
+}
+
+char Board::scoreGame() {
+	int White = 0;
+	int Black = 0;
+	char result;
+
+	for (int i = 0; i <= 7; i++) {
+		for (int j = 0; j <= 7; j++) {
+			if (board[i][j] == 'W')
+				White++;
+			else if (board[i][j] == 'B') 
+				Black++;
+		}
+	}
+	if (White > Black)
+		result = 'W';
+	else if (White < Black)
+		result = 'B';
+	else
+		result = 'T';
+	return result;
+}
+
+
 
 Board::~Board()
 {
