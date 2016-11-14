@@ -40,34 +40,93 @@ void Board::makeMove(char color, char column, int row)
 	int newcol = column - 0x41;	// convert character to numerical
 	int newrow = row - 1;
 
-	board[newcol][row - 1] = color;	// user enters columns 1-8; program needs 0-7   (Flipped col/row for correct placement)
+	board[newcol][newrow] = color;	// user enters columns 1-8; program needs 0-7   (Flipped col/row for correct placement)
 	// and flip pieces...
 
-/*	if (flipNorth) {
-		//Flip North
-		int tempCol = newcol;
-		int tempRow = newrow - 1;
+	//Flip North
+	if (flipNorth) {
+		newrow -= 1;
 
-		for (tempRow; tempRow >= 1; tempRow--) {
-			if (board[tempCol][tempRow] != ' ' && board[tempCol][tempRow] != color) {
-				if (color = 'W')
-					board[tempCol][tempRow] = 'W';
+		for (newrow; newrow >= 1; newrow--) {
+			if (board[newcol][newrow] != ' ' && board[newcol][newrow] != color) {
+				if (color == 'W')
+					board[newcol][newrow] = 'W';
 				else
-					board[tempCol][tempRow] = 'B';
+					board[newcol][newrow] = 'B';
 			}
-			else
-				tempRow = 0;
 		}
-		flipNorth = 0;
-	} */
+		flipNorth = false;
+	} 
+
+	//Flip South
+	if (flipSouth) {
+		newrow += 1;
+
+		for (newrow; newrow <= 8; newrow++) {
+			if (board[newcol][newrow] != ' ' && board[newcol][newrow] != color) {
+				if (color == 'W')
+					board[newcol][newrow] = 'W';
+				else
+					board[newcol][newrow] = 'B';
+			}
+		}
+		flipSouth = false;
+	}
+
+	//Flip West
+	if (flipWest) {
+		newcol -= 1;
+
+		for (newcol; newcol >= 1; newcol--) {
+			if (board[newcol][newrow] != ' ' && board[newcol][newrow] != color) {
+				if (color == 'W')
+					board[newcol][newrow] = 'W';
+				else
+					board[newcol][newrow] = 'B';
+			}
+		}
+		flipWest = false;
+	}
+
+	//Flip East
+	if (flipEast) {
+		newcol += 1;
+
+		for (newcol; newcol <= 8; newcol++) {
+			if (board[newcol][newrow] != ' ' && board[newcol][newrow] != color) {
+				if (color == 'W')
+					board[newcol][newrow] = 'W';
+				else
+					board[newcol][newrow] = 'B';
+			}
+		}
+		flipEast = false;
+	}
+
+
+	//Flip NorthEast
+
+
+
 }
+
+
+
+
+
 
 bool Board::isValidMove(char color, char column, int row)
 {
 	int newcol = column - 0x41;							// Convert character to numerical
 	int newrow = (row - 1);							// Shift column by 1
 	int tempCol, tempRow;
-	bool retVal = false;
+
+	//Reset flip flags
+	flipNorth = false;
+	flipSouth = false;
+	flipEast = false;
+	flipWest = false;
+
 
 	//Check if rows and columns are within valid range
 	if (newrow < 0 || newrow > 7 || newcol < 0 || newcol > 7) {
@@ -93,8 +152,7 @@ bool Board::isValidMove(char color, char column, int row)
 			tempRow -= 1;															// Move to next space above opponents piece
 			for (tempRow; tempRow >= 1; tempRow--) {								// Scan to upper edge of board for another player piece
 				if (board[tempCol][tempRow] == color) {
-					flipNorth = 1;
-					retVal = true;
+					flipNorth = true;
 				}
 			}
 		}
@@ -107,9 +165,9 @@ bool Board::isValidMove(char color, char column, int row)
 	if (tempCol >= 2 && tempCol <= 7 && tempRow >= 2 && tempRow <= 7) {				// Check if temp space exists on board 
 		if (board[tempCol][tempRow] != ' ' && board[tempCol][tempRow] != color) {	// Check if space is occupied by opponent piece
 			tempRow += 1;															// Move to next space below opponents piece
-			for (tempRow; tempRow >= 1; tempRow++) {								// Scan to lower edge of board for another player piece
+			for (tempRow; tempRow <= 8; tempRow++) {								// Scan to lower edge of board for another player piece
 				if (board[tempCol][tempRow] == color) {
-					retVal = true;
+					flipSouth = true;
 				}
 			}
 		}
@@ -124,7 +182,7 @@ bool Board::isValidMove(char color, char column, int row)
 			tempCol -= 1;															// Move to next space left of opponents piece
 			for (tempCol; tempCol >= 1; tempCol--) {								// Scan to left edge of board for another player piece
 				if (board[tempCol][tempRow] == color) {
-					retVal = true;
+					flipWest = true;
 				}
 			}
 		}
@@ -137,14 +195,14 @@ bool Board::isValidMove(char color, char column, int row)
 	if (tempCol >= 2 && tempCol <= 7 && tempRow >= 2 && tempRow <= 7) {				// Check if temp space exists on board 
 		if (board[tempCol][tempRow] != ' ' && board[tempCol][tempRow] != color) {	// Check if space is occupied by opponent piece
 			tempCol += 1;															// Move to next space right of opponents piece
-			for (tempCol; tempCol >= 1; tempCol++) {								// Scan to right edge of board for another player piece
+			for (tempCol; tempCol <= 8; tempCol++) {								// Scan to right edge of board for another player piece
 				if (board[tempCol][tempRow] == color) {
-					retVal = true;
+					flipEast = true;
 				}
 			}
 		}
 	}
-/*
+
 	//Check NorthWest
 	tempCol = newcol - 1;
 	tempRow = newrow - 1;
@@ -157,7 +215,7 @@ bool Board::isValidMove(char color, char column, int row)
 			if (tempCol > tempRow) {												// Scan using smallest dimensions 
 				for (tempRow; tempRow >= 1; tempRow--) {			
 					if (board[tempCol][tempRow] == color) {
-						retVal = true;
+						return true;
 					}
 				tempCol -= tempCol;
 				}
@@ -165,7 +223,7 @@ bool Board::isValidMove(char color, char column, int row)
 			else {
 				for (tempCol; tempCol >= 1; tempCol--) {
 					if (board[tempCol][tempRow] == color) {
-						retVal = true;
+						return true;
 					}
 				tempRow -= tempRow;
 				}
@@ -185,15 +243,15 @@ bool Board::isValidMove(char color, char column, int row)
 			if (tempCol > tempRow) {												// Scan using smallest dimensions 
 				for (tempRow; tempRow >= 1; tempRow--) {
 					if (board[tempCol][tempRow] == color) {
-						retVal = true;
+						return true;
 					}
 					tempCol += tempCol;
 				}
 			}
 			else {
-				for (tempCol; tempCol >= 1; tempCol++) {
+				for (tempCol; tempCol <= 8; tempCol++) {
 					if (board[tempCol][tempRow] == color) {
-						retVal = true;
+						return true;
 					}
 					tempRow -= tempRow;
 				}
@@ -211,17 +269,17 @@ bool Board::isValidMove(char color, char column, int row)
 			tempCol += 1;
 
 			if (tempCol > tempRow) {												// Scan using smallest dimensions 
-				for (tempRow; tempRow >= 1; tempRow++) {
+				for (tempRow; tempRow <= 8; tempRow++) {
 					if (board[tempCol][tempRow] == color) {
-						retVal = true;
+						return true;
 					}
 					tempCol += tempCol;
 				}
 			}
 			else {
-				for (tempCol; tempCol >= 1; tempCol++) {
+				for (tempCol; tempCol <= 8; tempCol++) {
 					if (board[tempCol][tempRow] == color) {
-						retVal = true;
+						return true;
 					}
 					tempRow += tempRow;
 				}
@@ -239,9 +297,9 @@ bool Board::isValidMove(char color, char column, int row)
 			tempCol -= 1;
 
 			if (tempCol > tempRow) {												// Scan using smallest dimensions 
-				for (tempRow; tempRow >= 1; tempRow++) {
+				for (tempRow; tempRow <= 8; tempRow++) {
 					if (board[tempCol][tempRow] == color) {
-						retVal = true;
+						return true;
 					}
 					tempCol -= tempCol;
 				}
@@ -249,14 +307,19 @@ bool Board::isValidMove(char color, char column, int row)
 			else {
 				for (tempCol; tempCol >= 1; tempCol--) {
 					if (board[tempCol][tempRow] == color) {
-						retVal = true;
+						return true;
 					}
 					tempRow += tempRow;
 				}
 			}
 		}
-	}  */
-	return retVal;
+	}  
+
+	if (flipNorth || flipSouth || flipEast || flipWest) {
+		return true;
+	}
+	else
+		return false;
 }
 
 Board::~Board()
