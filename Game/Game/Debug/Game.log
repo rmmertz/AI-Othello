@@ -1,4 +1,4 @@
 ﻿  Board.cpp
-c:\github repos\ai-othello\game\game\board.cpp(327): warning C4154: deletion of an array expression; conversion to pointer supplied
-  Game.vcxproj -> C:\GitHub Repos\AI-Othello\Game\Debug\Game.exe
-  Game.vcxproj -> C:\GitHub Repos\AI-Othello\Game\Debug\Game.pdb (Full PDB)
+c:\users\mvara\documents\github\ai-othello\game\game\board.cpp(476): warning C4154: deletion of an array expression; conversion to pointer supplied
+  Game.vcxproj -> C:\Users\mvara\Documents\GitHub\AI-Othello\Game\Debug\Game.exe
+  Game.vcxproj -> C:\Users\mvara\Documents\GitHub\AI-Othello\Game\Debug\Game.pdb (Full PDB)

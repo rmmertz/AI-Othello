@@ -56,9 +56,13 @@ void Board::makeMove(char color, char column, int row)
 			}
 		}
 		flipNorth = false;
-	} 
+	}
+
 
 	//Flip South
+	newcol = column - 0x41;	// convert character to numerical
+	newrow = row - 1;
+
 	if (flipSouth) {
 		newrow += 1;
 
@@ -74,6 +78,9 @@ void Board::makeMove(char color, char column, int row)
 	}
 
 	//Flip West
+	newcol = column - 0x41;	// convert character to numerical
+	newrow = row - 1;
+
 	if (flipWest) {
 		newcol -= 1;
 
@@ -89,6 +96,9 @@ void Board::makeMove(char color, char column, int row)
 	}
 
 	//Flip East
+	newcol = column - 0x41;	// convert character to numerical
+	newrow = row - 1;
+
 	if (flipEast) {
 		newcol += 1;
 
@@ -104,12 +114,146 @@ void Board::makeMove(char color, char column, int row)
 	}
 
 
+	//Flip NorthWest
+	newcol = column - 0x41;	// convert character to numerical
+	newrow = row - 1;
+
+	if (flipNW) {
+		newrow -= 1;
+		newcol -= 1;
+
+		if (newrow > newcol) {												// Scan using smallest dimensions 
+			for (newcol; newcol >= 1; newcol--) {
+				if (board[newcol][newrow] != ' ' && board[newcol][newrow] != color) {
+					if (color == 'W')
+						board[newcol][newrow] = 'W';
+					else
+						board[newcol][newrow] = 'B';
+				}
+				newrow -= 1;
+			}
+			flipNW = false;
+		}
+
+		else {												// Scan using smallest dimensions 
+			for (newrow; newrow >= 1; newrow--) {
+				if (board[newcol][newrow] != ' ' && board[newcol][newrow] != color) {
+					if (color == 'W')
+						board[newcol][newrow] = 'W';
+					else
+						board[newcol][newrow] = 'B';
+				}
+				newcol -= 1;
+			}
+			flipNW = false;
+		}
+	}
+
 	//Flip NorthEast
+	newcol = column - 0x41;	// convert character to numerical
+	newrow = row - 1;
 
+	if (flipNE) {
+		newrow -= 1;
+		newcol += 1;
 
+		if (newrow > newcol) {												// Scan using smallest dimensions 
+			for (newcol; newcol <= 8; newcol++) {
+				if (board[newcol][newrow] != ' ' && board[newcol][newrow] != color) {
+					if (color == 'W')
+						board[newcol][newrow] = 'W';
+					else
+						board[newcol][newrow] = 'B';
+				}
+				newrow -= 1;
+			}
+			flipNE = false;
+		}
 
+		else {												// Scan using smallest dimensions 
+			for (newrow; newrow >= 1; newrow--) {
+				if (board[newcol][newrow] != ' ' && board[newcol][newrow] != color) {
+					if (color == 'W')
+						board[newcol][newrow] = 'W';
+					else
+						board[newcol][newrow] = 'B';
+				}
+				newcol += 1;
+			}
+			flipNE = false;
+		}
+	}
+
+	//Flip SouthEast
+	newcol = column - 0x41;	// convert character to numerical
+	newrow = row - 1;
+
+	if (flipSE) {
+		newrow += 1;
+		newcol += 1;
+
+		if (newrow > newcol) {												// Scan using smallest dimensions 
+			for (newcol; newcol <= 8; newcol++) {
+				if (board[newcol][newrow] != ' ' && board[newcol][newrow] != color) {
+					if (color == 'W')
+						board[newcol][newrow] = 'W';
+					else
+						board[newcol][newrow] = 'B';
+				}
+				newrow += 1;
+			}
+			flipSE = false;
+		}
+
+		else {												// Scan using smallest dimensions 
+			for (newrow; newrow <= 8; newrow++) {
+				if (board[newcol][newrow] != ' ' && board[newcol][newrow] != color) {
+					if (color == 'W')
+						board[newcol][newrow] = 'W';
+					else
+						board[newcol][newrow] = 'B';
+				}
+				newcol += 1;
+			}
+			flipSE = false;
+		}
+	}
+
+	//Flip SouthWest
+	newcol = column - 0x41;	// convert character to numerical
+	newrow = row - 1;
+
+	if (flipSW) {
+		newrow += 1;
+		newcol -= 1;
+
+		if (newrow > newcol) {												// Scan using smallest dimensions 
+			for (newcol; newcol >= 1; newcol--) {
+				if (board[newcol][newrow] != ' ' && board[newcol][newrow] != color) {
+					if (color == 'W')
+						board[newcol][newrow] = 'W';
+					else
+						board[newcol][newrow] = 'B';
+				}
+				newrow += 1;
+			}
+			flipSW = false;
+		}
+
+		else {												// Scan using smallest dimensions 
+			for (newrow; newrow <= 8; newrow++) {
+				if (board[newcol][newrow] != ' ' && board[newcol][newrow] != color) {
+					if (color == 'W')
+						board[newcol][newrow] = 'W';
+					else
+						board[newcol][newrow] = 'B';
+				}
+				newcol -= 1;
+			}
+			flipSW = false;
+		}
+	}
 }
-
 
 
 
@@ -126,6 +270,11 @@ bool Board::isValidMove(char color, char column, int row)
 	flipSouth = false;
 	flipEast = false;
 	flipWest = false;
+	flipNE = false;
+	flipNW = false;
+	flipSE = false;
+	flipSW = false;
+
 
 
 	//Check if rows and columns are within valid range
@@ -215,7 +364,7 @@ bool Board::isValidMove(char color, char column, int row)
 			if (tempCol > tempRow) {												// Scan using smallest dimensions 
 				for (tempRow; tempRow >= 1; tempRow--) {			
 					if (board[tempCol][tempRow] == color) {
-						return true;
+						flipNW = true;
 					}
 				tempCol -= tempCol;
 				}
@@ -223,7 +372,7 @@ bool Board::isValidMove(char color, char column, int row)
 			else {
 				for (tempCol; tempCol >= 1; tempCol--) {
 					if (board[tempCol][tempRow] == color) {
-						return true;
+						flipNW = true;
 					}
 				tempRow -= tempRow;
 				}
@@ -243,7 +392,7 @@ bool Board::isValidMove(char color, char column, int row)
 			if (tempCol > tempRow) {												// Scan using smallest dimensions 
 				for (tempRow; tempRow >= 1; tempRow--) {
 					if (board[tempCol][tempRow] == color) {
-						return true;
+						flipNE = true;
 					}
 					tempCol += tempCol;
 				}
@@ -251,7 +400,7 @@ bool Board::isValidMove(char color, char column, int row)
 			else {
 				for (tempCol; tempCol <= 8; tempCol++) {
 					if (board[tempCol][tempRow] == color) {
-						return true;
+						flipNE = true;
 					}
 					tempRow -= tempRow;
 				}
@@ -271,7 +420,7 @@ bool Board::isValidMove(char color, char column, int row)
 			if (tempCol > tempRow) {												// Scan using smallest dimensions 
 				for (tempRow; tempRow <= 8; tempRow++) {
 					if (board[tempCol][tempRow] == color) {
-						return true;
+						flipSE = true;
 					}
 					tempCol += tempCol;
 				}
@@ -279,7 +428,7 @@ bool Board::isValidMove(char color, char column, int row)
 			else {
 				for (tempCol; tempCol <= 8; tempCol++) {
 					if (board[tempCol][tempRow] == color) {
-						return true;
+						flipSE = true;
 					}
 					tempRow += tempRow;
 				}
@@ -299,7 +448,7 @@ bool Board::isValidMove(char color, char column, int row)
 			if (tempCol > tempRow) {												// Scan using smallest dimensions 
 				for (tempRow; tempRow <= 8; tempRow++) {
 					if (board[tempCol][tempRow] == color) {
-						return true;
+						flipSW = true;
 					}
 					tempCol -= tempCol;
 				}
@@ -307,7 +456,7 @@ bool Board::isValidMove(char color, char column, int row)
 			else {
 				for (tempCol; tempCol >= 1; tempCol--) {
 					if (board[tempCol][tempRow] == color) {
-						return true;
+						flipSW = true;
 					}
 					tempRow += tempRow;
 				}
@@ -315,7 +464,7 @@ bool Board::isValidMove(char color, char column, int row)
 		}
 	}  
 
-	if (flipNorth || flipSouth || flipEast || flipWest) {
+	if (flipNorth || flipSouth || flipEast || flipWest || flipNW || flipNE || flipSW || flipSE) {
 		return true;
 	}
 	else

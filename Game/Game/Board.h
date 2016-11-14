@@ -11,6 +11,6 @@ public:
 	void display();
 	void makeMove(char color, char column, int row);
 	bool isValidMove(char color, char column, int row);
-	bool flipNorth, flipSouth, flipWest, flipEast = false;
+	bool flipNorth, flipSouth, flipWest, flipEast, flipNW, flipNE, flipSW, flipSE;
 };
 
