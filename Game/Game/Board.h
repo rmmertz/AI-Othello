@@ -9,7 +9,7 @@ private:
 public:
 	void initBoard();
 	void display();
-	void makeMove(char color, char row, int column);
-	bool isValidMove(char row, int column);
+	void makeMove(char color, char column, int row);
+	bool isValidMove(char color, char column, int row);
 };
 

@@ -11,13 +11,12 @@ int main()
 {
 	// declarations
 	char WhoStarts;
-	char row;
-	int column;
+	char column;
+	int row;
 	bool gameOver;
 
 	Board Board;
 	Board.initBoard();
-	Board.display();
 
 	// initializations
 	gameOver = 0;
@@ -26,33 +25,46 @@ int main()
 	cout << "Who begins? W or B: ";
 	cin >> WhoStarts;
 
+	//Check for valid player selection 
+	while (WhoStarts != 'B' && WhoStarts != 'W') {
+		cout << "\nInvalid Selection \nWho begins? W or B: ";
+		cin >> WhoStarts;
+	}
+
+
+	Board.display();
+
 	if (WhoStarts == 'B')
 	{ 		
-		cout << "Enter black move: ";
-		cin >> row >> column;
-		Board.makeMove('B', row, column);
+		do {
+			cout << "Enter black move: ";
+			cin >> column >> row;
+		} while (!Board.isValidMove('B', column, row));
+
+		Board.makeMove('B', column, row);
 		Board.display();
-	}
+		}
+
 
 	while (!gameOver)
 	{
 		// read moves
-		cout << "Enter white move: ";
-		cin >> row >> column;
-		if (Board.isValidMove(row, column))
-			Board.makeMove('W', row, column);
-		else
-			cout << "Invalid move" << endl;
+		do {
+			cout << "Enter white move: ";
+			cin >> column >> row;
+		} while (!Board.isValidMove('W', column, row));
+
+		Board.makeMove('W', column, row);
 		Board.display();
 
 		if(!gameOver)
 		{
-			cout << "Enter black move: ";
-			cin >> row >> column;
-			if (Board.isValidMove(row, column))
-				Board.makeMove('B', row, column);
-			else
-				cout << "Invalid move" << endl;
+			do {
+				cout << "Enter black move: ";
+				cin >> column >> row;
+			} while (!Board.isValidMove('B', column, row));
+
+			Board.makeMove('B', column, row);
 			Board.display();
 		}
 
