@@ -33,21 +33,27 @@ void Board::display()
 		cout << endl << "    - - - - - - - - " << endl;	// indicate grid 
 	}
 	cout << endl;
-} 
+}
 
 void Board::makeMove(char color, char column, int row) {
 
 	// Check for skipped move
-	if (column == 'S' && row == 1)
+	if (column == 'S' && row == 1) {
+		skipCount++;
+		//		if (++skipCount >= 2)						// Increment skip counter and check if two skips happened in a row
+		//			gameOver = true;
 		return;
+	}
+
+	skipCount = 0;									// Reset skip counter upon valid move
 
 	int newcol = column - 0x41;	// convert character to numerical
 	int newrow = row - 1;
 
 	board[newcol][newrow] = color;	// user enters columns 1-8; program needs 0-7   (Flipped col/row for correct placement)
-	// and flip pieces...
+									// and flip pieces...
 
-	//Flip North
+									//Flip North
 	if (flipNorth) {
 		newrow -= 1;
 
@@ -257,7 +263,9 @@ void Board::makeMove(char color, char column, int row) {
 			flipSW = false;
 		}
 	}
-//	spacesRemain -= 1;
+
+	//Decrement remaining spaces counter upon valid move
+	spacesRemain--;
 }
 
 
@@ -300,7 +308,7 @@ bool Board::isValidMove(char color, char column, int row) {
 	// It does not validate remaining possible moves 
 
 	//Check North
-	tempCol = newcol;						
+	tempCol = newcol;
 	tempRow = newrow - 1;
 
 	if (tempCol >= 0 && tempCol <= 7 && tempRow >= 0 && tempRow <= 7) {				// Check if temp space exists on board 
@@ -315,7 +323,7 @@ bool Board::isValidMove(char color, char column, int row) {
 	}
 
 	//Check South 
-	tempCol = newcol;							
+	tempCol = newcol;
 	tempRow = newrow + 1;
 
 	if (tempCol >= 0 && tempCol <= 7 && tempRow >= 0 && tempRow <= 7) {				// Check if temp space exists on board 
@@ -330,7 +338,7 @@ bool Board::isValidMove(char color, char column, int row) {
 	}
 
 	//Check West
-	tempCol = newcol - 1;										
+	tempCol = newcol - 1;
 	tempRow = newrow;
 
 	if (tempCol >= 0 && tempCol <= 7 && tempRow >= 0 && tempRow <= 7) {				// Check if temp space exists on board 
@@ -345,7 +353,7 @@ bool Board::isValidMove(char color, char column, int row) {
 	}
 
 	//Check East
-	tempCol = newcol + 1;									
+	tempCol = newcol + 1;
 	tempRow = newrow;
 
 	if (tempCol >= 0 && tempCol <= 7 && tempRow >= 0 && tempRow <= 7) {				// Check if temp space exists on board 
@@ -369,11 +377,11 @@ bool Board::isValidMove(char color, char column, int row) {
 			tempCol -= 1;
 
 			if (tempCol > tempRow) {												// Scan using smallest dimensions 
-				for (tempRow; tempRow >= 0; tempRow--) {			
+				for (tempRow; tempRow >= 0; tempRow--) {
 					if (board[tempCol][tempRow] == color) {
 						flipNW = true;
 					}
-				tempCol -= tempCol;
+					tempCol -= tempCol;
 				}
 			}
 			else {
@@ -381,12 +389,12 @@ bool Board::isValidMove(char color, char column, int row) {
 					if (board[tempCol][tempRow] == color) {
 						flipNW = true;
 					}
-				tempRow -= tempRow;
+					tempRow -= tempRow;
 				}
 			}
 		}
 	}
-	
+
 	//Check NorthEast
 	tempCol = newcol + 1;
 	tempRow = newrow - 1;
@@ -414,7 +422,7 @@ bool Board::isValidMove(char color, char column, int row) {
 			}
 		}
 	}
-	
+
 	//Check SouthEast
 	tempCol = newcol + 1;
 	tempRow = newrow + 1;
@@ -442,7 +450,7 @@ bool Board::isValidMove(char color, char column, int row) {
 			}
 		}
 	}
-	
+
 	//Check SouthWest
 	tempCol = newcol - 1;
 	tempRow = newrow + 1;
@@ -469,42 +477,65 @@ bool Board::isValidMove(char color, char column, int row) {
 				}
 			}
 		}
-	}  
+	}
 
 	if (flipNorth || flipSouth || flipEast || flipWest || flipNW || flipNE || flipSW || flipSE) {
 		return true;
 	}
 	else
 		cout << "Invalid Move!" << endl;
-		return false;
+	return false;
 }
 
 
 bool Board::endGame() {
-	if (spacesRemain > 0)
-		return false;
-	else
-		return true;
-}
 
-char Board::scoreGame() {
+	// Local counter variables
 	int White = 0;
 	int Black = 0;
-	char result;
 
+	// Scan board and count White and Black spaces
 	for (int i = 0; i <= 7; i++) {
 		for (int j = 0; j <= 7; j++) {
 			if (board[i][j] == 'W')
 				White++;
-			else if (board[i][j] == 'B') 
+			else if (board[i][j] == 'B')
 				Black++;
 		}
 	}
-	if (White > Black)
-		result = 'W';
-	else if (White < Black)
-		result = 'B';
+
+	if (!White || !Black)					// There are zero white or black pieces on the board
+		return true;
+	else if (skipCount >= 2)				// Two skips have occured in a row
+		return true;
+	else if (spacesRemain <= 0)				// The board is completely full
+		return true;
 	else
+		return false;
+}
+
+char Board::scoreGame() {
+
+	// Local counter and return variables
+	int White = 0;
+	int Black = 0;
+	char result;
+
+	// Scan board and count White and Black spaces
+	for (int i = 0; i <= 7; i++) {
+		for (int j = 0; j <= 7; j++) {
+			if (board[i][j] == 'W')
+				White++;
+			else if (board[i][j] == 'B')
+				Black++;
+		}
+	}
+
+	if (White > Black)						// White has more spaces than black
+		result = 'W';
+	else if (White < Black)					// Black has more spaces than white
+		result = 'B';
+	else                                    // Black and White have the same number of spaces
 		result = 'T';
 	return result;
 }
@@ -513,5 +544,5 @@ char Board::scoreGame() {
 
 Board::~Board()
 {
-	delete[] board;
+	//	delete Board::board;					// Somehow breaks game, commented out for now
 }

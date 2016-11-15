@@ -5,7 +5,7 @@ public:
 	Board();	 // constructor
 	~Board();	// destructor
 private:
-	char board [8][8];
+	char board[8][8];
 public:
 	void initBoard();
 	void display();
@@ -14,6 +14,6 @@ public:
 	char scoreGame();
 	bool endGame();
 	bool flipNorth, flipSouth, flipWest, flipEast, flipNW, flipNE, flipSW, flipSE;
-	int spacesRemain; 
+	bool gameOver;
+	int spacesRemain, skipCount;
 };
-
