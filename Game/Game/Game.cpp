@@ -20,6 +20,7 @@ int main()
 	Board.initBoard();
 	Board.spacesRemain = 60;
 	Board.skipCount = 0;
+	Board.state = 0;
 	Board.gameOver = false;
 
 	// Display rules and challenge for first player slection
@@ -51,13 +52,18 @@ int main()
 	while (!Board.gameOver) {
 
 		// Read move for white player
-		do {
+/*		do {
 			cout << "Enter white move: ";
 			cin >> column >> row;
 		} while (!Board.isValidMove('W', column, row));
-
-		Board.makeMove('W', column, row);					// Execute move
+		Board.makeMove('W', column, row);
+*/
+		Board.state = 1;
+		Board.aiSearch('W');
+		Board.isValidMove(Board.aiBestMoveColor, Board.aiBestMoveCol, Board.aiBestMoveRow);
+		Board.makeMove(Board.aiBestMoveColor, Board.aiBestMoveCol, Board.aiBestMoveRow);	// Execute move
 		Board.display();									// Redraw board
+		Board.state = 0;
 		Board.gameOver = Board.endGame();					// Check for endgame condition
 
 
