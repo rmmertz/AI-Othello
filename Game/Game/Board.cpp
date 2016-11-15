@@ -38,8 +38,14 @@ void Board::display()
 void Board::makeMove(char color, char column, int row) {
 
 	// Check for skipped move
-	if (column == 'S' && row == 1)
+	if (column == 'S' && row == 1) {
+		skipCount++;
+//		if (++skipCount >= 2)						// Increment skip counter and check if two skips happened in a row
+//			gameOver = true;
 		return;
+	}
+
+	skipCount = 0;									// Reset skip counter upon valid move
 
 	int newcol = column - 0x41;	// convert character to numerical
 	int newrow = row - 1;
@@ -257,7 +263,9 @@ void Board::makeMove(char color, char column, int row) {
 			flipSW = false;
 		}
 	}
-//	spacesRemain -= 1;
+
+	//Decrement remaining spaces counter upon valid move
+	spacesRemain--;									
 }
 
 
@@ -481,17 +489,39 @@ bool Board::isValidMove(char color, char column, int row) {
 
 
 bool Board::endGame() {
-	if (spacesRemain > 0)
-		return false;
-	else
+	
+	// Local counter variables
+	int White = 0;
+	int Black = 0;
+
+	// Scan board and count White and Black spaces
+	for (int i = 0; i <= 7; i++) {
+		for (int j = 0; j <= 7; j++) {
+			if (board[i][j] == 'W')
+				White++;
+			else if (board[i][j] == 'B')
+				Black++;
+		}
+	}
+
+	if (!White || !Black)					// There are zero white or black pieces on the board
 		return true;
+	else if (skipCount >= 2)				// Two skips have occured in a row
+		return true;
+	else if (spacesRemain <= 0)				// The board is completely full
+		return true;
+	else
+		return false;
 }
 
 char Board::scoreGame() {
+
+	// Local counter and return variables
 	int White = 0;
 	int Black = 0;
 	char result;
 
+	// Scan board and count White and Black spaces
 	for (int i = 0; i <= 7; i++) {
 		for (int j = 0; j <= 7; j++) {
 			if (board[i][j] == 'W')
@@ -500,11 +530,12 @@ char Board::scoreGame() {
 				Black++;
 		}
 	}
-	if (White > Black)
+
+	if (White > Black)						// White has more spaces than black
 		result = 'W';
-	else if (White < Black)
-		result = 'B';
-	else
+	else if (White < Black)					// Black has more spaces than white
+		result = 'B';		
+	else                                    // Black and White have the same number of spaces
 		result = 'T';
 	return result;
 }
@@ -513,5 +544,5 @@ char Board::scoreGame() {
 
 Board::~Board()
 {
-	delete[] board;
+//	delete Board::board;					// Somehow breaks game, commented out for now
 }

@@ -9,35 +9,35 @@ using namespace std;
 
 int main()
 {
-	// declarations
+	// Declarations
 	char WhoStarts;
 	char column;
 	char winner;
 	int row;
-	bool gameOver;
-
 	Board Board;
+
+	// Initializations
 	Board.initBoard();
+	Board.spacesRemain = 60;
+	Board.skipCount = 0;
+	Board.gameOver = false;
 
-
-	// initializations
-	gameOver = false;
-
+	// Display rules and challenge for first player slection
 	cout << "A-H for rows, 1-8 for columns\nS1 for skip" << endl;
 	cout << "Who begins? W or B: ";
 	cin >> WhoStarts;
 
-	//Check for valid player selection 
+	// Check for valid player selection 
 	while (WhoStarts != 'B' && WhoStarts != 'W') {
 		cout << "\nInvalid Selection \nWho begins? W or B: ";
 		cin >> WhoStarts;
 	}
 
-
+	// Initial board display
 	Board.display();
 
-	if (WhoStarts == 'B')
-	{ 		
+	// Special case for first player = black
+	if (WhoStarts == 'B') { 		
 		do {
 			cout << "Enter black move: ";
 			cin >> column >> row;
@@ -45,38 +45,38 @@ int main()
 
 		Board.makeMove('B', column, row);
 		Board.display();
+	}
 
-		}
+	// Primary game loop
+	while (!Board.gameOver) {
 
-
-	while (!gameOver)
-	{
-
-		// read moves
+		// Read move for white player
 		do {
 			cout << "Enter white move: ";
 			cin >> column >> row;
 		} while (!Board.isValidMove('W', column, row));
 
-		Board.makeMove('W', column, row);
-		Board.display();
-//		gameOver = Board.endGame();
+		Board.makeMove('W', column, row);					// Execute move
+		Board.display();									// Redraw board
+		Board.gameOver = Board.endGame();					// Check for endgame condition
 
-		if(!gameOver)
+
+		// Read move for black player
+		if(!Board.gameOver)
 		{
 			do {
 				cout << "Enter black move: ";
 				cin >> column >> row;
 			} while (!Board.isValidMove('B', column, row));
 
-			Board.makeMove('B', column, row);
-			Board.display();
-//			gameOver = Board.endGame();
+			Board.makeMove('B', column, row);				// Execute move
+			Board.display();								// Redraw board
+			Board.gameOver = Board.endGame();				// Check for endgame condition
 		}
-	}
+	} // End game loop
 
-/*
-	//Score game
+
+	// Score game
 	cout << "Game Over" << endl;
 	winner = Board.scoreGame();
 
@@ -86,8 +86,9 @@ int main()
 		cout << "Winner is: White" << endl;
 	else
 		cout << "Winner is: Black" << endl;
-*/
-    return 0;
+
+	system("PAUSE");										// Wait to close window
+	return 0;
 }
 
 
