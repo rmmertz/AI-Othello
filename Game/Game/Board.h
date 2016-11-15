@@ -14,7 +14,6 @@ public:
 	char scoreGame();
 	bool endGame();
 	bool flipNorth, flipSouth, flipWest, flipEast, flipNW, flipNE, flipSW, flipSE;
-	bool gameOver;
-	int spacesRemain, skipCount; 
+	int spacesRemain; 
 };
 
