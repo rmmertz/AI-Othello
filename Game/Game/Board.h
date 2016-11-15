@@ -11,5 +11,9 @@ public:
 	void display();
 	void makeMove(char color, char column, int row);
 	bool isValidMove(char color, char column, int row);
+	char scoreGame();
+	bool endGame();
+	bool flipNorth, flipSouth, flipWest, flipEast, flipNW, flipNE, flipSW, flipSE;
+	int spacesRemain; 
 };
 
