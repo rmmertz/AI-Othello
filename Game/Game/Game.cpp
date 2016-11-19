@@ -7,13 +7,16 @@
 
 using namespace std;
 
+int minimax(Board, int, int);
+int SEF(Board, char);
+
 int main()
 {
 	// Declarations
 	char WhoStarts;
 	char column;
 	char winner;
-	int row;
+	int row;                
 	Board Board;
 
 	// Initializations
@@ -59,8 +62,6 @@ int main()
 		Board.makeMove('W', column, row);					// Execute move
 		Board.display();									// Redraw board
 		Board.gameOver = Board.endGame();					// Check for endgame condition
-
-
 															// Read move for black player
 		if (!Board.gameOver)
 		{
@@ -91,3 +92,71 @@ int main()
 	return 0;
 }
 
+
+int SEF(Board Board, char color)
+{
+	int numValidMoves = 0;
+
+	for (char i = 'A'; i <= 'H'; i++)
+	{
+		for (int j = 1; j < 9; j++)
+		{
+			if (Board.isValidMove(color, i, j))
+				++numValidMoves;
+		}
+	}
+
+	return numValidMoves;
+}
+
+int minimax(Board Board, int level, int depth)
+{
+	int value, Rvalue;
+	char leafColor;
+	if (depth % 2 == 0)		// developed the game tree ending at white
+		leafColor = 'W';
+	else			// developed the game tree ending at black
+		leafColor = 'B';
+
+	if (level == depth)
+		return SEF(Board, leafColor);
+	else if (level % 2 == 0)		// maximizing level: white move
+	{
+		value = -61;
+		for (char i = 'A'; i <= 'H'; i++)	// i: columns
+		{
+			for (int j = 1; j < 9; j++)		// j: rows
+			{
+				Board.makeMove('W', i, j);
+				Rvalue = minimax(Board, level + 1, depth);
+				if (Rvalue > value)
+				{
+					value = Rvalue;
+					//Board.keepMove(i, j);	// column, row
+				}
+				Board.unmakeMove();
+			}
+		}
+	}
+	else		// minimizing level: black move
+	{
+		value = 61;
+		for (char i = 'A'; i <= 'H'; i++)	// i: columns
+		{
+			for (int j = 1; j < 9; j++)		// j: rows
+			{
+				Board.makeMove('B', i, j);
+				Rvalue = minimax(Board, level + 1, depth);
+				if (Rvalue < value)
+				{
+					value = Rvalue;
+					Board.AIBestMove.column = i;
+					Board.AIBestMove.row = j;
+				}
+				Board.unmakeMove();
+			}
+		}
+	}
+
+	return value;
+}

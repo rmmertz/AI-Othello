@@ -1,6 +1,4 @@
-﻿  Game.cpp
-  Board.cpp
-  Generating Code...
-  LINK : C:\Users\mvara\Documents\GitHub\AI-Othello\Game\Debug\Game.exe not found or not built by the last incremental link; performing full link
-  Game.vcxproj -> C:\Users\mvara\Documents\GitHub\AI-Othello\Game\Debug\Game.exe
-  Game.vcxproj -> C:\Users\mvara\Documents\GitHub\AI-Othello\Game\Debug\Game.pdb (Full PDB)
+﻿  Board.cpp
+c:\users\rachel\documents\github\ai-othello\game\game\board.cpp(105): warning C4552: '<': operator has no effect; expected operator with side-effect
+c:\users\rachel\documents\github\ai-othello\game\game\board.cpp(107): warning C4552: '<': operator has no effect; expected operator with side-effect
+  Game.vcxproj -> C:\Users\Rachel\Documents\GitHub\AI-Othello\Game\Debug\Game.exe
