@@ -412,7 +412,7 @@ bool Board::isValidMove(char color, char column, int row) {
 					if (currentBoard[tempCol][tempRow] == color) {
 						flipNW = true;
 					}
-					tempCol -= tempCol;
+					tempCol--;
 				}
 			}
 			else {
@@ -420,7 +420,7 @@ bool Board::isValidMove(char color, char column, int row) {
 					if (currentBoard[tempCol][tempRow] == color) {
 						flipNW = true;
 					}
-					tempRow -= tempRow;
+					tempRow--;
 				}
 			}
 		}
@@ -440,7 +440,7 @@ bool Board::isValidMove(char color, char column, int row) {
 					if (currentBoard[tempCol][tempRow] == color) {
 						flipNE = true;
 					}
-					tempCol += tempCol;
+					tempCol++;
 				}
 			}
 			else {
@@ -448,7 +448,7 @@ bool Board::isValidMove(char color, char column, int row) {
 					if (currentBoard[tempCol][tempRow] == color) {
 						flipNE = true;
 					}
-					tempRow -= tempRow;
+					tempRow--;
 				}
 			}
 		}
@@ -468,15 +468,15 @@ bool Board::isValidMove(char color, char column, int row) {
 					if (currentBoard[tempCol][tempRow] == color) {
 						flipSE = true;
 					}
-					tempCol += tempCol;		// Is this right?? Game-ending error occurred when last value of tempCol was 256.
-				}
+					tempCol++;		// Is this right?? Game-ending error occurred when last value of tempCol was 256.
+				}					// No, it was not right :p
 			}
 			else {
 				for (tempCol; tempCol <= 7; tempCol++) {
 					if (currentBoard[tempCol][tempRow] == color) {
 						flipSE = true;
 					}
-					tempRow += tempRow;
+					tempRow++;
 				}
 			}
 		}
@@ -496,7 +496,7 @@ bool Board::isValidMove(char color, char column, int row) {
 					if (currentBoard[tempCol][tempRow] == color) {
 						flipSW = true;
 					}
-					tempCol -= tempCol;
+					tempCol--;
 				}
 			}
 			else {
@@ -504,7 +504,7 @@ bool Board::isValidMove(char color, char column, int row) {
 					if (currentBoard[tempCol][tempRow] == color) {
 						flipSW = true;
 					}
-					tempRow += tempRow;
+					tempRow++;
 				}
 			}
 		}
