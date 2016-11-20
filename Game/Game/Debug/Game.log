@@ -1,4 +1,2 @@
-﻿  Board.cpp
-c:\users\rachel\documents\github\ai-othello\game\game\board.cpp(105): warning C4552: '<': operator has no effect; expected operator with side-effect
-c:\users\rachel\documents\github\ai-othello\game\game\board.cpp(107): warning C4552: '<': operator has no effect; expected operator with side-effect
+﻿  Game.cpp
   Game.vcxproj -> C:\Users\Rachel\Documents\GitHub\AI-Othello\Game\Debug\Game.exe

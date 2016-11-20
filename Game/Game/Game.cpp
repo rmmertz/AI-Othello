@@ -26,7 +26,7 @@ int main()
 	Board.gameOver = false;
 
 	// Display rules and challenge for first player slection
-	cout << "A-H for rows, 1-8 for columns\nS1 for skip" << endl;
+	cout << "A-H for rows, 1-8 for columns" << endl << "S1 for skip" << endl;
 	cout << "Who begins? W or B: ";
 	cin >> WhoStarts;
 
@@ -42,8 +42,13 @@ int main()
 	// Special case for first player = black
 	if (WhoStarts == 'B') {
 		do {
+			/**** Testing SEF *****/
+			cout << "Current SEF score (# of moves) for black: " << SEF(Board, 'B') << endl;
+			/*********/
 			cout << "Enter black move: ";
 			cin >> column >> row;
+			if (!Board.isValidMove('B', column, row))
+				cout << "Invalid move!" << endl;
 		} while (!Board.isValidMove('B', column, row));
 
 		Board.makeMove('B', column, row);
@@ -55,19 +60,30 @@ int main()
 
 		// Read move for white player
 		do {
+			/**** Testing SEF *****/
+			cout << "Current SEF score (# of moves) for white: " << SEF(Board, 'W') << endl;
+			/*********/
 			cout << "Enter white move: ";
 			cin >> column >> row;
+			if (!Board.isValidMove('W', column, row))
+				cout << "Invalid move!" << endl;
 		} while (!Board.isValidMove('W', column, row));
 
 		Board.makeMove('W', column, row);					// Execute move
 		Board.display();									// Redraw board
 		Board.gameOver = Board.endGame();					// Check for endgame condition
-															// Read move for black player
+
+		// Read move for black player
 		if (!Board.gameOver)
 		{
 			do {
+				/**** Testing SEF *****/
+				cout << "Current SEF score (# of moves) for black: " << SEF(Board, 'B') << endl;
+				/*********/
 				cout << "Enter black move: ";
 				cin >> column >> row;
+				if (!Board.isValidMove('B', column, row))
+					cout << "Invalid move!" << endl;
 			} while (!Board.isValidMove('B', column, row));
 
 			Board.makeMove('B', column, row);				// Execute move
@@ -77,7 +93,7 @@ int main()
 	} // End game loop
 
 
-	  // Score game
+	// Score game
 	cout << "Game Over" << endl;
 	winner = Board.scoreGame();
 
@@ -102,7 +118,10 @@ int SEF(Board Board, char color)
 		for (int j = 1; j < 9; j++)
 		{
 			if (Board.isValidMove(color, i, j))
+			{ 
 				++numValidMoves;
+				cout << " Valid move: " << i << j << endl;		// TODO for test
+			}
 		}
 	}
 

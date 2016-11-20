@@ -77,9 +77,9 @@ void Board::makeMove(char color, char column, int row) {
 	skipCount = 0;									// Reset skip counter upon valid move
 
 	// back up the current board before the next move is made
-	for (int i = 0; i++; i < 8)
+	for (int i = 0; i < 8; i++)
 	{
-		for (int j = 0; j++; j < 8)
+		for (int j = 0; j < 8; j++)
 		{
 			previousBoard[i][j] = currentBoard[i][j];	
 		}
@@ -327,12 +327,10 @@ bool Board::isValidMove(char color, char column, int row) {
 
 	//Check if rows and columns are within valid range
 	if (newrow < 0 || newrow > 7 || newcol < 0 || newcol > 7) {
-		cout << "Invalid Move!" << endl;
 		return false;
 	}
 	//Check if space is presently occupied 
 	if (currentBoard[newcol][newrow] != ' ') {
-		cout << "Invalid Move!" << endl;
 		return false;
 	}
 
@@ -470,7 +468,7 @@ bool Board::isValidMove(char color, char column, int row) {
 					if (currentBoard[tempCol][tempRow] == color) {
 						flipSE = true;
 					}
-					tempCol += tempCol;
+					tempCol += tempCol;		// Is this right?? Game-ending error occurred when last value of tempCol was 256.
 				}
 			}
 			else {
@@ -516,8 +514,7 @@ bool Board::isValidMove(char color, char column, int row) {
 		return true;
 	}
 	else
-		cout << "Invalid Move!" << endl;
-	return false;
+		return false;
 }
 
 
@@ -537,7 +534,7 @@ bool Board::endGame() {
 		}
 	}
 
-	if (!White || !Black)					// There are zero white or black pieces on the board
+	if (White == 0|| Black == 0)			// There are zero white or black pieces on the board
 		return true;
 	else if (skipCount >= 2)				// Two skips have occurred in a row
 		return true;
