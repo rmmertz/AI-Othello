@@ -7,23 +7,24 @@
 
 using namespace std;
 
-int minimax(Board, int, int);
+int minimax(Board, int, int, char *, int *);
 int SEF(Board, char);
 
 int main()
 {
 	// Declarations
 	char WhoStarts;
-	char column;
+	int whiteRow;
+	char whiteColumn;
 	char winner;
-	int row;                
+	int blackRow;
+	char blackColumn;
+	int depth;		// lookahead depth
+	bool gameOver = false;
 	Board Board;
 
 	// Initializations
 	Board.initBoard();
-	Board.spacesRemain = 60;
-	Board.skipCount = 0;
-	Board.gameOver = false;
 
 	// Display rules and challenge for first player slection
 	cout << "A-H for rows, 1-8 for columns" << endl << "S1 for skip" << endl;
@@ -36,59 +37,56 @@ int main()
 		cin >> WhoStarts;
 	}
 
+	cout << "Enter an integer for lookahead depth: ";
+	cin >> depth;
+
 	// Initial board display
 	Board.display();
 
 	// Special case for first player = black
 	if (WhoStarts == 'B') {
 		do {
-			/**** Testing SEF *****/
-			cout << "Current SEF score (# of moves) for black: " << SEF(Board, 'B') << endl;
-			/*********/
 			cout << "Enter black move: ";
-			cin >> column >> row;
-			if (!Board.isValidMove('B', column, row))
+			cin >> blackColumn >> blackRow;
+			if (!Board.isValidMove('B', blackColumn, blackRow))
 				cout << "Invalid move!" << endl;
-		} while (!Board.isValidMove('B', column, row));
+		} while (!Board.isValidMove('B', blackColumn, blackRow));
 
-		Board.makeMove('B', column, row);
+		Board.makeMove('B', blackColumn, blackRow);
 		Board.display();
 	}
 
 	// Primary game loop
-	while (!Board.gameOver) {
+	while (!gameOver) {
 
-		// Read move for white player
-		do {
-			/**** Testing SEF *****/
-			cout << "Current SEF score (# of moves) for white: " << SEF(Board, 'W') << endl;
-			/*********/
-			cout << "Enter white move: ";
-			cin >> column >> row;
-			if (!Board.isValidMove('W', column, row))
-				cout << "Invalid move!" << endl;
-		} while (!Board.isValidMove('W', column, row));
+		// Examine game tree and make move for white player
+		/*do {*/
+			cout << "Highest SEF score is " << minimax(Board, 0, depth, &whiteColumn, &whiteRow) << endl;
+			cout << "Highest-scoring move for white is " << whiteColumn << whiteRow << endl;
+			/*cout << "Enter white move: ";
+			cin >> whiteColumn >> whiteRow;*/
+			/*if (!Board.isValidMove('W', whiteColumn, whiteRow))
+				cout << "Invalid move!" << endl;*/
+		/*} while (!Board.isValidMove('W', whiteColumn, whiteRow));*/
 
-		Board.makeMove('W', column, row);					// Execute move
+		cout << "Making move for white" << endl;
+		Board.makeMove('W', whiteColumn, whiteRow);			// Execute move
 		Board.display();									// Redraw board
-		Board.gameOver = Board.endGame();					// Check for endgame condition
+		gameOver = Board.endGame();							// Check for endgame condition
 
 		// Read move for black player
-		if (!Board.gameOver)
+		if (!gameOver)
 		{
 			do {
-				/**** Testing SEF *****/
-				cout << "Current SEF score (# of moves) for black: " << SEF(Board, 'B') << endl;
-				/*********/
 				cout << "Enter black move: ";
-				cin >> column >> row;
-				if (!Board.isValidMove('B', column, row))
+				cin >> blackColumn >> blackRow;
+				if (!Board.isValidMove('B', blackColumn, blackRow))
 					cout << "Invalid move!" << endl;
-			} while (!Board.isValidMove('B', column, row));
+			} while (!Board.isValidMove('B', blackColumn, blackRow));
 
-			Board.makeMove('B', column, row);				// Execute move
+			Board.makeMove('B', blackColumn, blackRow);				// Execute move
 			Board.display();								// Redraw board
-			Board.gameOver = Board.endGame();				// Check for endgame condition
+			gameOver = Board.endGame();				// Check for endgame condition
 		}
 	} // End game loop
 
@@ -120,7 +118,7 @@ int SEF(Board Board, char color)
 			if (Board.isValidMove(color, i, j))
 			{ 
 				++numValidMoves;
-				cout << " Valid move: " << i << j << endl;		// TODO for test
+				//cout << " Valid move: " << i << j << endl;		// TODO for test
 			}
 		}
 	}
@@ -128,7 +126,7 @@ int SEF(Board Board, char color)
 	return numValidMoves;
 }
 
-int minimax(Board Board, int level, int depth)
+int minimax(Board Board, int level, int depth, char *column, int *row)
 {
 	int value, Rvalue;
 	char leafColor;
@@ -138,7 +136,10 @@ int minimax(Board Board, int level, int depth)
 		leafColor = 'B';
 
 	if (level == depth)
+	{
+		//cout << "AIBestMove " << Board.AIBestMove.column << Board.AIBestMove.row << " saved again" << endl;
 		return SEF(Board, leafColor);
+	}
 	else if (level % 2 == 0)		// maximizing level: white move
 	{
 		value = -61;
@@ -146,14 +147,23 @@ int minimax(Board Board, int level, int depth)
 		{
 			for (int j = 1; j < 9; j++)		// j: rows
 			{
-				Board.makeMove('W', i, j);
-				Rvalue = minimax(Board, level + 1, depth);
-				if (Rvalue > value)
-				{
-					value = Rvalue;
-					//Board.keepMove(i, j);	// column, row
+				if(Board.isValidMove('W', i, j))
+				{ 
+					Board.makeMove('W', i, j);
+					//cout << "Minimax: made white move " << i << j << endl;	// TODO testing
+					Rvalue = minimax(Board, level + 1, depth, &*column, &*row);
+					if (Rvalue > value)
+					{
+						value = Rvalue;
+						*column = i;	// save the white move
+						*row = j;
+						//Board.AIBestMove.column = i;	// save the white move
+						//Board.AIBestMove.row = j;
+						//cout << "AIBestMove " << Board.AIBestMove.column << Board.AIBestMove.row << " saved" << endl;
+					}
+					Board.unmakeMove();
+					//cout << "Minimax: unmade white move " << i << j << endl;		// TODO testing
 				}
-				Board.unmakeMove();
 			}
 		}
 	}
@@ -164,18 +174,21 @@ int minimax(Board Board, int level, int depth)
 		{
 			for (int j = 1; j < 9; j++)		// j: rows
 			{
-				Board.makeMove('B', i, j);
-				Rvalue = minimax(Board, level + 1, depth);
-				if (Rvalue < value)
+				if (Board.isValidMove('B', i, j))
 				{
-					value = Rvalue;
-					Board.AIBestMove.column = i;
-					Board.AIBestMove.row = j;
+					Board.makeMove('B', i, j);
+					//cout << "Minimax: made black move " << i << j << endl;	// TODO testing
+					Rvalue = minimax(Board, level + 1, depth, &*column, &*row);
+					if (Rvalue < value)
+					{
+						value = Rvalue;
+					}
+					Board.unmakeMove();
+					//cout << "Minimax: unmade black move " << i << j << endl;		// TODO testing
 				}
-				Board.unmakeMove();
 			}
 		}
 	}
-
+	//cout << "AIBestMove " << Board.AIBestMove.column << Board.AIBestMove.row << " saved last" << endl;
 	return value;
 }

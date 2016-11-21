@@ -26,6 +26,9 @@ void Board::initBoard()
 	previousBoard[4][4] = 'B';	//Change to W for diagonal testing
 	previousBoard[4][3] = 'W';	//Change to B for diagonal testing
 	previousBoard[3][4] = 'W';
+
+	spacesRemain = 60;
+	skipCount = 0;
 }
 
 void Board::display()
@@ -56,14 +59,6 @@ void Board::unmakeMove()
 	}
 }
 
-// mocks/ unnecessary
-//void Board::keepMove(char column, int row)
-//{
-//	AIBestMove.row = row;
-//	AIBestMove.column = column;
-//}
-
-
 void Board::makeMove(char color, char column, int row) {
 
 	// Check for skipped move
@@ -73,7 +68,7 @@ void Board::makeMove(char color, char column, int row) {
 		//			gameOver = true;
 		return;
 	}
-	//else. also shouldn't increment skipCount twice.
+	//else
 	skipCount = 0;									// Reset skip counter upon valid move
 
 	// back up the current board before the next move is made
@@ -517,6 +512,89 @@ bool Board::isValidMove(char color, char column, int row) {
 		return false;
 }
 
+//int Board::minimax(int level, int depth)
+//{
+//	int value, Rvalue;
+//	char leafColor;
+//	if (depth % 2 == 0)		// developed the game tree ending at white
+//		leafColor = 'W';
+//	else			// developed the game tree ending at black
+//		leafColor = 'B';
+//
+//	if (level == depth)
+//	{
+//		cout << "AIBestMove " << AIBestMove.column << AIBestMove.row << " saved again" << endl;
+//		return SEF(leafColor);
+//	}
+//	else if (level % 2 == 0)		// maximizing level: white move
+//	{
+//		value = -61;
+//		for (char i = 'A'; i <= 'H'; i++)	// i: columns
+//		{
+//			for (int j = 1; j < 9; j++)		// j: rows
+//			{
+//				if (isValidMove('W', i, j))
+//				{
+//					makeMove('W', i, j);
+//					cout << "Minimax: made white move " << i << j << endl;	// TODO testing
+//					Rvalue = minimax(level + 1, depth);
+//					if (Rvalue > value)
+//					{
+//						value = Rvalue;
+//						AIBestMove.column = i;	// save the white move
+//						AIBestMove.row = j;
+//						//cout << "AIBestMove " << Board.AIBestMove.column << Board.AIBestMove.row << " saved" << endl;
+//					}
+//					unmakeMove();
+//					cout << "Minimax: unmade white move " << i << j << endl;		// TODO testing
+//				}
+//			}
+//		}
+//	}
+//	else		// minimizing level: black move
+//	{
+//		value = 61;
+//		for (char i = 'A'; i <= 'H'; i++)	// i: columns
+//		{
+//			for (int j = 1; j < 9; j++)		// j: rows
+//			{
+//				if (isValidMove('B', i, j))
+//				{
+//					makeMove('B', i, j);
+//					cout << "Minimax: made black move " << i << j << endl;	// TODO testing
+//					Rvalue = minimax(level + 1, depth);
+//					if (Rvalue < value)
+//					{
+//						value = Rvalue;
+//					}
+//					unmakeMove();
+//					cout << "Minimax: unmade black move " << i << j << endl;		// TODO testing
+//				}
+//			}
+//		}
+//	}
+//	cout << "AIBestMove " << AIBestMove.column << AIBestMove.row << " saved last" << endl;
+//	return value;
+//}
+//
+//int Board::SEF(char color)
+//{
+//	int numValidMoves = 0;
+//
+//	for (char i = 'A'; i <= 'H'; i++)
+//	{
+//		for (int j = 1; j < 9; j++)
+//		{
+//			if (isValidMove(color, i, j))
+//			{
+//				++numValidMoves;
+//				//cout << " Valid move: " << i << j << endl;		// TODO for test
+//			}
+//		}
+//	}
+//
+//	return numValidMoves;
+//}
 
 bool Board::endGame() {
 
