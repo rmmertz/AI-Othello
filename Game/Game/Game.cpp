@@ -70,8 +70,12 @@ int main()
 		/*} while (!Board.isValidMove('W', whiteColumn, whiteRow));*/
 
 		cout << "Making move for white" << endl;
-		Board.isValidMove('W', whiteColumn, whiteRow);		// Needed to cause pieces to flip in makeMove
-		Board.makeMove('W', whiteColumn, whiteRow);			// Execute move
+		if (Board.isValidMove('W', whiteColumn, whiteRow)) {	// Check if minimax returned move is actually valid
+			Board.makeMove('W', whiteColumn, whiteRow);			// Execute move
+		}
+		else
+			cout << "ERROR: Invalid move attempted by White" << endl;
+
 		Board.display();									// Redraw board
 		gameOver = Board.endGame();							// Check for endgame condition
 
