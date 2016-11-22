@@ -32,7 +32,7 @@ int main()
 	cin >> WhoStarts;
 
 	// Check for valid player selection 
-	while (WhoStarts != 'B' && WhoStarts != 'W') {
+	while (WhoStarts != 'B' && WhoStarts != 'W' && WhoStarts != 'w' && WhoStarts != 'b') {
 		cout << "\nInvalid Selection \nWho begins? W or B: ";
 		cin >> WhoStarts;
 	}
@@ -44,10 +44,11 @@ int main()
 	Board.display();
 
 	// Special case for first player = black
-	if (WhoStarts == 'B') {
+	if (WhoStarts == 'B' || WhoStarts == 'b') {
 		do {
 			cout << "Enter black move: ";
 			cin >> blackColumn >> blackRow;
+			//toupper(blackColumn);
 			if (!Board.isValidMove('B', blackColumn, blackRow))
 				cout << "Invalid move!" << endl;
 		} while (!Board.isValidMove('B', blackColumn, blackRow));
@@ -81,6 +82,7 @@ int main()
 			do {
 				cout << "Enter black move: ";
 				cin >> blackColumn >> blackRow;
+				//toupper(blackColumn);
 				if (!Board.isValidMove('B', blackColumn, blackRow))
 					cout << "Invalid move!" << endl;
 			} while (!Board.isValidMove('B', blackColumn, blackRow));
