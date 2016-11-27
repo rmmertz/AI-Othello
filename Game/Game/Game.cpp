@@ -71,8 +71,12 @@ int main()
 		/*} while (!Board.isValidMove('W', whiteColumn, whiteRow));*/
 
 		cout << "Making move for white" << endl;
-		Board.isValidMove('W', whiteColumn, whiteRow);		// Needed to cause pieces to flip in makeMove
-		Board.makeMove('W', whiteColumn, whiteRow);			// Execute move
+		if (Board.isValidMove('W', whiteColumn, whiteRow)) {	// Check if minimax returned move is actually valid
+			Board.makeMove('W', whiteColumn, whiteRow);			// Execute move
+		}
+		else
+			cout << "ERROR: Invalid move attempted by White" << endl;
+
 		Board.display();									// Redraw board
 		gameOver = Board.endGame();							// Check for endgame condition
 
@@ -131,12 +135,18 @@ int SEF(Board Board, char color)
 
 int minimax(Board Board, int level, int depth, char *column, int *row)
 {
+	char tempMoveColumn;
+	int tempMoveRow, moveCounter;
 	int value, Rvalue;
 	char leafColor;
 	if (depth % 2 == 0)		// developed the game tree ending at white
 		leafColor = 'W';
 	else			// developed the game tree ending at black
 		leafColor = 'B';
+
+	tempMoveColumn = 'S';
+	tempMoveRow = 1;
+	moveCounter = 1;
 
 	if (level == depth)
 	{
@@ -152,11 +162,18 @@ int minimax(Board Board, int level, int depth, char *column, int *row)
 			{
 				if(Board.isValidMove('W', i, j))
 				{ 
+					tempMoveColumn = i;
+					tempMoveRow = j;
 					Board.makeMove('W', i, j);
 					//cout << "Minimax: made white move " << i << j << endl;	// TODO testing
 					Rvalue = minimax(Board, level + 1, depth, &*column, &*row);
 					if (Rvalue > value)
 					{
+						if (moveCounter <= 1) {
+							tempMoveColumn = i;
+							tempMoveRow = j;
+							moveCounter++;
+						}
 						value = Rvalue;
 						*column = i;	// save the white move
 						*row = j;
@@ -193,5 +210,8 @@ int minimax(Board Board, int level, int depth, char *column, int *row)
 		}
 	}
 	//cout << "AIBestMove " << Board.AIBestMove.column << Board.AIBestMove.row << " saved last" << endl;
+	*column = tempMoveColumn;
+	*row = tempMoveRow;
+	
 	return value;
 }
