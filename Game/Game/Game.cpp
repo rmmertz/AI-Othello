@@ -13,7 +13,8 @@ int SEF(Board, char);
 int main()
 {
 	// Declarations
-	char WhoStarts;
+	//char WhoStarts;
+	int numValidBlackMoves;
 	int whiteRow;
 	char whiteColumn;
 	char winner;
@@ -28,14 +29,14 @@ int main()
 
 	// Display rules and challenge for first player slection
 	cout << "A-H for rows, 1-8 for columns" << endl << "S1 for skip" << endl;
-	cout << "Who begins? W or B: ";
-	cin >> WhoStarts;
+	//cout << "Who begins? W or B: ";
+	//cin >> WhoStarts;
 
 	// Check for valid player selection 
-	while (WhoStarts != 'B' && WhoStarts != 'W' && WhoStarts != 'w' && WhoStarts != 'b') {
-		cout << "\nInvalid Selection \nWho begins? W or B: ";
-		cin >> WhoStarts;
-	}
+	//while (WhoStarts != 'B' && WhoStarts != 'W' && WhoStarts != 'w' && WhoStarts != 'b') {
+	//	cout << "\nInvalid Selection \nWho begins? W or B: ";
+	//	cin >> WhoStarts;
+	//}		// TODO for testig
 
 	cout << "Enter an integer for lookahead depth: ";
 	cin >> depth;
@@ -44,7 +45,7 @@ int main()
 	Board.display();
 
 	// Special case for first player = black
-	if (WhoStarts == 'B' || WhoStarts == 'b') {
+	//if (WhoStarts == 'B' || WhoStarts == 'b') {
 		do {
 			cout << "Enter black move: ";
 			cin >> blackColumn >> blackRow;
@@ -55,21 +56,15 @@ int main()
 
 		Board.makeMove('B', blackColumn, blackRow);
 		Board.display();
-	}
+	//}		// TODO for testig
 
 	// Primary game loop
 	while (!gameOver) {
 
 		// Examine game tree and make move for white player
-		/*do {*/
-			cout << "Highest SEF score is " << minimax(Board, 0, depth, &whiteColumn, &whiteRow) << endl;
-			cout << "Highest-scoring move for white is " << whiteColumn << whiteRow << endl;
-			/*cout << "Enter white move: ";
-			cin >> whiteColumn >> whiteRow;*/
-			/*if (!Board.isValidMove('W', whiteColumn, whiteRow))
-				cout << "Invalid move!" << endl;*/
-		/*} while (!Board.isValidMove('W', whiteColumn, whiteRow));*/
-
+		cout << "Highest SEF score is " << minimax(Board, 0, depth, &whiteColumn, &whiteRow) << endl;
+		cout << "Highest-scoring move for white is " << whiteColumn << whiteRow << endl;
+		
 		cout << "Making move for white" << endl;
 		if (Board.isValidMove('W', whiteColumn, whiteRow)) {	// Check if minimax returned move is actually valid
 			Board.makeMove('W', whiteColumn, whiteRow);			// Execute move
@@ -83,8 +78,24 @@ int main()
 		// Read move for black player
 		if (!gameOver)
 		{
+			numValidBlackMoves = 0;	// initialize counter
+			// scan quickly for ANY valid moves: time saver
+			for (char i = 'A'; i <= 'H'; i++)	// i: columns
+			{
+				for (int j = 1; j < 9; j++)		// j: rows
+				{
+					if (Board.isValidMove('B', i, j))
+					{
+						numValidBlackMoves++;
+						break;	// stop: found a valid move
+					}
+				}
+			}
 			do {
-				cout << "Enter black move: ";
+				if (numValidBlackMoves == 0)
+					cout << "No valid moves: you must enter S1 " << endl;
+				else
+					cout << "Enter black move: ";
 				cin >> blackColumn >> blackRow;
 				//toupper(blackColumn);
 				if (!Board.isValidMove('B', blackColumn, blackRow))

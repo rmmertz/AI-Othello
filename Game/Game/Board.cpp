@@ -681,6 +681,8 @@ char Board::scoreGame() {
 		}
 	}
 
+	cout << endl << "Black: " << Black << " White: " << White << endl;
+
 	if (White > Black)						// White has more spaces than black
 		result = 'W';
 	else if (White < Black)					// Black has more spaces than white
